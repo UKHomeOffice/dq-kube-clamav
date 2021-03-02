@@ -28,11 +28,19 @@ steps:
   environment:
     USER: helm
     KUBE_NAMESPACE: dq-apps-notprod
+    NOTPROD_KUBE_CERTIFICATE_AUTHORITY: https://raw.githubusercontent.com/UKHomeOffice/acp-ca/master/acp-notprod.crt
+    NOTPROD_KUBE_SERVER: https://kube-api-notprod.notprod.acp.homeoffice.gov.uk
+    NOTPROD_KUBE_CLUSTER_NAME: acp-notprod
+    IMAGE_NAME: clamav
+    NOTPROD_HELM_KUBETOKEN:
+      from_secret: NOTPROD_HELM_KUBETOKEN
+
   commands:
     - export KUBE_SERVER=$${NOTPROD_KUBE_SERVER}
     - export KUBE_CLUSTER_NAME=$${NOTPROD_KUBE_CLUSTER_NAME}
     - export KUBE_CERTIFICATE_AUTHORITY=$${NOTPROD_KUBE_CERTIFICATE_AUTHORITY}
-    - helm upgrade --install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} .charts/clamav
+    - export HELM_KUBETOKEN=$${NOTPROD_HELM_KUBETOKEN}
+    - helm upgrade --install --namespace=$${KUBE_NAMESPACE} --kube-token=$${NOTPROD_HELM_KUBETOKEN} $${IMAGE_NAME} .charts/clamav
     # - helm upgrade --install -f values-dev.yaml -f secrets.yaml $${IMAGE_NAME} --namespace=$${KUBE_NAMESPACE} --set image.tag=$${DRONE_BUILD_NUMBER} helm
   when:
     event:
