@@ -33,7 +33,7 @@ steps:
     - export KUBE_CLUSTER_NAME=$${NOTPROD_KUBE_CLUSTER_NAME}
     - export KUBE_CERTIFICATE_AUTHORITY=$${NOTPROD_KUBE_CERTIFICATE_AUTHORITY}
     - cd charts\clamav
-    - helm --install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} .charts/clamav
+    - helm upgrade --install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} .charts\/clamav
     # - helm upgrade --install -f values-dev.yaml -f secrets.yaml $${IMAGE_NAME} --namespace=$${KUBE_NAMESPACE} --set image.tag=$${DRONE_BUILD_NUMBER} helm
   when:
     event:
