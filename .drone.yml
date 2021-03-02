@@ -18,7 +18,7 @@ steps:
 - name: Lint Chart
   image: quay.io/ukhomeofficedigital/helm:v3.4.0
   commands:
-    - helm lint charts
+    - helm lint ./charts/clamav
   when:
     event: [push, tag]
 
