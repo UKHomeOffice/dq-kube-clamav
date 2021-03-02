@@ -1,0 +1,53 @@
+kind: pipeline
+name: default
+type: kubernetes
+
+platform:
+  os: linux
+  arch: amd64
+
+environment:
+  NOTPROD_KUBE_CERTIFICATE_AUTHORITY: https://raw.githubusercontent.com/UKHomeOffice/acp-ca/master/acp-notprod.crt
+  NOTPROD_KUBE_SERVER: https://kube-api-notprod.notprod.acp.homeoffice.gov.uk
+  NOTPROD_KUBE_CLUSTER_NAME: acp-notprod
+  IMAGE_NAME: clamav
+
+
+steps:
+
+- name: Lint Chart
+  image: quay.io/ukhomeofficedigital/helm:v3.4.0
+  commands:
+    - helm lint ./charts
+  when:
+    event: [push, tag]
+
+- name: Deploy to Notprod namespace
+  pull: if-not-exists
+  image: quay.io/ukhomeofficedigital/helm:v3.4.0
+  environment:
+    USER: helm
+    KUBE_NAMESPACE: dq-apps-notprod
+  commands:
+    - export KUBE_SERVER=$${NOTPROD_KUBE_SERVER}
+    - export KUBE_CLUSTER_NAME=$${NOTPROD_KUBE_CLUSTER_NAME}
+    - export KUBE_CERTIFICATE_AUTHORITY=$${NOTPROD_KUBE_CERTIFICATE_AUTHORITY}
+    - cd charts\clamav
+    - helm --install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} .charts/clamav
+    # - helm upgrade --install -f values-dev.yaml -f secrets.yaml $${IMAGE_NAME} --namespace=$${KUBE_NAMESPACE} --set image.tag=$${DRONE_BUILD_NUMBER} helm
+  when:
+    event:
+      - push
+
+
+
+#TODO - Deploy to Prod
+
+# services:
+#   - name: docker
+#     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+#   - name: anchore-submission-server
+#     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
+#     pull: always
+#     commands:
+#       - /run.sh server
