@@ -16,7 +16,8 @@ service:
 
 serviceAccount:
   # serviceAccount.create -- Should we create the service account and roles
-  create: true
+  # create: true
+  create: false
   # serviceAccount.name -- The name of the service account used by clamav-notify
   name: clamav-notify
   # serviceAccount.annotations -- Annotaions for the service account used by clamav-notify
