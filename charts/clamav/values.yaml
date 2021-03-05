@@ -6,7 +6,7 @@
 nameOverride: ""
 
 # fullnameOverride -- override the full name of the clamav chart
-fullnameOverride: ""
+fullnameOverride: "dq-clamav"
 
 service:
   # service.port -- The port to be used by the clamav service
@@ -94,7 +94,7 @@ clamav:
       kind: ClusterIssuer
   scaling:
     # clamav.scaling.minReplicas -- The minumum number of clamav replicas
-    minReplicas: 2
+    minReplicas: 1
     # clamav.scaling.maxReplicas -- The maximum number of clamav replicas
     maxReplicas: 20
     # clamav.scaling.cpuTarget -- The target cpu usage percentage for clamav
