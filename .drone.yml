@@ -10,8 +10,10 @@ environment:
   NOTPROD_KUBE_CERTIFICATE_AUTHORITY: https://raw.githubusercontent.com/UKHomeOffice/acp-ca/master/acp-notprod.crt
   NOTPROD_KUBE_SERVER: https://kube-api-notprod.notprod.acp.homeoffice.gov.uk
   NOTPROD_KUBE_CLUSTER_NAME: acp-notprod
+  PROD_KUBE_CERTIFICATE_AUTHORITY: https://raw.githubusercontent.com/UKHomeOffice/acp-ca/master/acp-prod.crt
+  PROD_KUBE_SERVER: https://kube-api-prod.prod.acp.homeoffice.gov.uk
+  PROD_KUBE_CLUSTER_NAME: acp-prod
   IMAGE_NAME: clamav
-
 
 steps:
 
@@ -28,10 +30,6 @@ steps:
   environment:
     USER: helm
     KUBE_NAMESPACE: dq-apps-notprod
-    # NOTPROD_KUBE_CERTIFICATE_AUTHORITY: https://raw.githubusercontent.com/UKHomeOffice/acp-ca/master/acp-notprod.crt
-    # NOTPROD_KUBE_SERVER: https://kube-api-notprod.notprod.acp.homeoffice.gov.uk
-    # NOTPROD_KUBE_CLUSTER_NAME: acp-notprod
-    # IMAGE_NAME: clamav
     NOTPROD_HELM_KUBETOKEN:
       from_secret: NOTPROD_HELM_KUBETOKEN
 
@@ -48,15 +46,28 @@ steps:
     event:
       - push
 
+- name: Deploy to Prod namespace
+  pull: if-not-exists
+  image: quay.io/ukhomeofficedigital/helm:v3.4.0
+  environment:
+    USER: helm
+    KUBE_NAMESPACE: dq-apps
+    PROD_HELM_KUBETOKEN:
+      from_secret: PROD_HELM_KUBETOKEN
 
-
-#TODO - Deploy to Prod
-
-# services:
-#   - name: docker
-#     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
-#   - name: anchore-submission-server
-#     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
-#     pull: always
-#     commands:
-#       - /run.sh server
+  commands:
+    - export KUBE_SERVER=$${PROD_KUBE_SERVER}
+    - export KUBE_CLUSTER_NAME=$${PROD_KUBE_CLUSTER_NAME}
+    - export KUBE_CERTIFICATE_AUTHORITY=$${PROD_KUBE_CERTIFICATE_AUTHORITY}
+    - export KUBE_TOKEN=$${PROD_HELM_KUBETOKEN}
+    - /setup-kubeconfig.sh
+    # - kubectl delete secrets $(kubectl get secret | grep sh.helm.release.v1.clamav | awk '{print $1}')
+    - helm upgrade --install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
+    # - helm upgrade --install -f values-dev.yaml -f secrets.yaml $${IMAGE_NAME} --namespace=$${KUBE_NAMESPACE} --set image.tag=$${DRONE_BUILD_NUMBER} helm
+  when:
+    branch:
+    - master
+    event:
+    - promote
+    target:
+    - production
