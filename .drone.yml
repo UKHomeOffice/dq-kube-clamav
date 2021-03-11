@@ -28,10 +28,10 @@ steps:
   environment:
     USER: helm
     KUBE_NAMESPACE: dq-apps-notprod
-    NOTPROD_KUBE_CERTIFICATE_AUTHORITY: https://raw.githubusercontent.com/UKHomeOffice/acp-ca/master/acp-notprod.crt
-    NOTPROD_KUBE_SERVER: https://kube-api-notprod.notprod.acp.homeoffice.gov.uk
-    NOTPROD_KUBE_CLUSTER_NAME: acp-notprod
-    IMAGE_NAME: clamav
+    # NOTPROD_KUBE_CERTIFICATE_AUTHORITY: https://raw.githubusercontent.com/UKHomeOffice/acp-ca/master/acp-notprod.crt
+    # NOTPROD_KUBE_SERVER: https://kube-api-notprod.notprod.acp.homeoffice.gov.uk
+    # NOTPROD_KUBE_CLUSTER_NAME: acp-notprod
+    # IMAGE_NAME: clamav
     NOTPROD_HELM_KUBETOKEN:
       from_secret: NOTPROD_HELM_KUBETOKEN
 
