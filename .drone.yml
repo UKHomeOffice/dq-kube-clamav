@@ -40,7 +40,8 @@ steps:
     - export KUBE_TOKEN=$${NOTPROD_HELM_KUBETOKEN}
     - /setup-kubeconfig.sh
     - helm delete --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME}
-    - helm install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
+    - helm upgrade --install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
+    # - helm install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
   when:
     event:
       - push
@@ -61,8 +62,8 @@ steps:
     - export KUBE_TOKEN=$${PROD_HELM_KUBETOKEN}
     - /setup-kubeconfig.sh
     - helm delete --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME}
-    # - helm upgrade --install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
-    - helm install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
+    - helm upgrade --install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
+    # - helm install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
   when:
     branch:
     - master
@@ -70,28 +71,3 @@ steps:
     - promote
     target:
     - production
-
-# - name: Deploy to Prod namespace
-#   pull: if-not-exists
-#   image: quay.io/ukhomeofficedigital/helm:v3.4.0
-#   environment:
-#     USER: helm
-#     KUBE_NAMESPACE: dq-apps
-#     PROD_HELM_KUBETOKEN:
-#       from_secret: PROD_HELM_KUBETOKEN
-#
-#   commands:
-#     - export KUBE_SERVER=$${PROD_KUBE_SERVER}
-#     - export KUBE_CLUSTER_NAME=$${PROD_KUBE_CLUSTER_NAME}
-#     - export KUBE_CERTIFICATE_AUTHORITY=$${PROD_KUBE_CERTIFICATE_AUTHORITY}
-#     - export KUBE_TOKEN=$${PROD_HELM_KUBETOKEN}
-#     - /setup-kubeconfig.sh
-#     - helm delete --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} --purge
-#     - helm upgrade --install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
-#   when:
-#     branch:
-#     - master
-#     event:
-#     - promote
-#     target:
-#     - production
