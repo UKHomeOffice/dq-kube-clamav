@@ -29,17 +29,18 @@ Clamav will be installed in the namespace and available at https://clamav/
 
 More detailed documentation on the helm chart can be found [here](/charts/clamav/README.md)
 
-## using dq-clamav
+## Scanning Files using dq-clamav
 
-the dq-clamav endpoint can be called from any pod that is deployed in the same namespace as the dq-clamav pod.
+The dq-clamav endpoint can be called from any pod that is deployed in the same namespace as the dq-clamav pod.
 
-for testing purposes you can use the following command from the cmd of pod
+To scan a file using the dq-clamav service:
+- Run the following command from container (provioded that curl is insralled)
 
 ```
 curl -sk -F "name=eicar" -F "file=@sample.xml" https://dq-clamav/scan
 ```
 
-when running the scan via the python module requests, you cna use the following:
+- Use the python3 module requests as follows:
 
 ```
 response = requests.post('https://dq-clamav/scan', files={'file': scan}, data={'name': scan_file}, verify=False)
