@@ -28,7 +28,6 @@ steps:
   pull: if-not-exists
   image: quay.io/ukhomeofficedigital/helm:v3.4.0
   environment:
-    ENV: notprod
     USER: helm
     KUBE_NAMESPACE: dq-apps-notprod
     NOTPROD_HELM_KUBETOKEN:
@@ -40,9 +39,9 @@ steps:
     - export KUBE_CERTIFICATE_AUTHORITY=$${NOTPROD_KUBE_CERTIFICATE_AUTHORITY}
     - export KUBE_TOKEN=$${NOTPROD_HELM_KUBETOKEN}
     - /setup-kubeconfig.sh
-    - helm upgrade --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
-    # - helm delete --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME}
-    # - helm upgrade --install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
+    # - helm upgrade --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
+    - helm delete --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME}
+    - helm upgrade --install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
     # - helm install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
   when:
     event:
@@ -52,7 +51,6 @@ steps:
   pull: if-not-exists
   image: quay.io/ukhomeofficedigital/helm:v3.4.0
   environment:
-    ENV: prod
     USER: helm
     KUBE_NAMESPACE: dq-apps
     PROD_HELM_KUBETOKEN:
