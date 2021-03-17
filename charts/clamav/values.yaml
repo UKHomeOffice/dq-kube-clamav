@@ -94,7 +94,7 @@ clamav:
       kind: ClusterIssuer
   scaling:
     # clamav.scaling.minReplicas -- The minumum number of clamav replicas
-    minReplicas: 0
+    minReplicas: 1
     # clamav.scaling.maxReplicas -- The maximum number of clamav replicas
     maxReplicas: 20
     # clamav.scaling.cpuTarget -- The target cpu usage percentage for clamav
