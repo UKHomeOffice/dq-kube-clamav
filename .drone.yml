@@ -42,7 +42,6 @@ steps:
     # - helm upgrade --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
     - helm delete --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME}
     - helm upgrade --install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
-    # - helm install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
   when:
     event:
       - push
@@ -62,11 +61,9 @@ steps:
     - export KUBE_CERTIFICATE_AUTHORITY=$${PROD_KUBE_CERTIFICATE_AUTHORITY}
     - export KUBE_TOKEN=$${PROD_HELM_KUBETOKEN}
     - /setup-kubeconfig.sh
-    - sed -i 's/minReplicas\:\ 1/minReplicas\:\ 2/g' ./charts/clamav/values.yaml
+    # - sed -i 's/minReplicas\:\ 1/minReplicas\:\ 2/g' ./charts/clamav/values.yaml
     - helm upgrade --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
-    # - helm delete --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME}
-    # - helm upgrade --install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
-    # - helm install --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
+
   when:
     branch:
     - master
