@@ -4,14 +4,14 @@ metadata:
   name: {{ include "clamav.fullname" . }}-mirror-config
 data:
   cvdmirror.crontab: |
-    #Keep local definitions up to date 
+    #Keep local definitions up to date
     {{.Values.clamavMirror.cvdUpdate.cvdCron}} cvd update -V
     #Test and publish signatures
     {{.Values.clamavMirror.cvdUpdate.mirrorCron}} ./test.sh
 
-  freshclam.conf: |    
+  freshclam.conf: |
     DatabaseOwner clam
-    DatabaseMirror http://localhost:8081
+    PrivateMirror http://localhost:8081
     TestDatabases yes
     LogVerbose yes
 
@@ -19,7 +19,7 @@ data:
     server.document-root = "/home/clam/db/"
     server.port = 8081
     mimetype.assign = (
-      ".htm" => "text/html", 
+      ".htm" => "text/html",
     )
     index-file.names = ( "index.htm" )
 
@@ -27,7 +27,6 @@ data:
     server.document-root = "/home/clam/mirror/"
     server.port = 8080
     mimetype.assign = (
-      ".htm" => "text/html", 
+      ".htm" => "text/html",
     )
     index-file.names = ( "index.htm" )
-    
