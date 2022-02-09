@@ -32,7 +32,6 @@ steps:
     KUBE_NAMESPACE: dq-apps-notprod
     NOTPROD_HELM_KUBETOKEN:
       from_secret: NOTPROD_HELM_KUBETOKEN
-
   commands:
     - export KUBE_SERVER=$${NOTPROD_KUBE_SERVER}
     - export KUBE_CLUSTER_NAME=$${NOTPROD_KUBE_CLUSTER_NAME}
@@ -52,7 +51,6 @@ steps:
     KUBE_NAMESPACE: dq-apps
     PROD_HELM_KUBETOKEN:
       from_secret: PROD_HELM_KUBETOKEN
-
   commands:
     - export KUBE_SERVER=$${PROD_KUBE_SERVER}
     - export KUBE_CLUSTER_NAME=$${PROD_KUBE_CLUSTER_NAME}
@@ -61,7 +59,6 @@ steps:
     - /setup-kubeconfig.sh
     - sed -i 's/minReplicas\:\ 1/minReplicas\:\ 2/g' ./charts/clamav/values.yaml
     - helm upgrade -i --wait --timeout 5m --history-max 5 --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
-
   when:
     branch:
     - master
