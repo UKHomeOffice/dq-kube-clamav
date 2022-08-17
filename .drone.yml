@@ -14,15 +14,25 @@ environment:
   PROD_KUBE_SERVER: https://kube-api-prod.prod.acp.homeoffice.gov.uk
   PROD_KUBE_CLUSTER_NAME: acp-prod
   IMAGE_NAME: clamav
+  CLAMAV_BUILD_NO: 0.3.7
+  NGINX_PROXY_VERSION: v5.0
 
 steps:
 
-- name: Lint Chart
-  image: quay.io/ukhomeofficedigital/helm:v3.4.0
+- name: trivy_scan
+  pull: if-not-exists
+  image: quay.io/ukhomeofficedigital/trivyscanner:master
   commands:
-    - helm lint ./charts/clamav
+  - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/acp-clamav-mirror:$${CLAMAV_BUILD_NO}
+  - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/acp-clamav-http:$${CLAMAV_BUILD_NO}
+  - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/acp-clamav:$${CLAMAV_BUILD_NO}
+  - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/nginx-proxy:$${NGINX_PROXY_VERSION}
   when:
-    event: [push, tag]
+    branch:
+      exclude:
+      - master
+    event:
+    - push
 
 - name: Deploy to Notprod namespace
   pull: if-not-exists
@@ -38,6 +48,8 @@ steps:
     - export KUBE_CERTIFICATE_AUTHORITY=$${NOTPROD_KUBE_CERTIFICATE_AUTHORITY}
     - export KUBE_TOKEN=$${NOTPROD_HELM_KUBETOKEN}
     - /setup-kubeconfig.sh
+    - sed -i "s/CLAMAV_BUILD_NO/$${CLAMAV_BUILD_NO}/g" ./charts/clamav/Chart.yaml
+    - sed -i "s/NGINX_PROXY_VERSION/$${NGINX_PROXY_VERSION}/g" ./charts/clamav/values.yaml
     - helm upgrade -i --wait --timeout 5m --history-max 5 --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
   when:
     event:
@@ -58,6 +70,8 @@ steps:
     - export KUBE_TOKEN=$${PROD_HELM_KUBETOKEN}
     - /setup-kubeconfig.sh
     - sed -i 's/minReplicas\:\ 1/minReplicas\:\ 2/g' ./charts/clamav/values.yaml
+    - sed -i "s/CLAMAV_BUILD_NO/$${CLAMAV_BUILD_NO}/g" ./charts/clamav/Chart.yaml
+    - sed -i "s/NGINX_PROXY_VERSION/$${NGINX_PROXY_VERSION}/g" ./charts/clamav/values.yaml
     - helm upgrade -i --wait --timeout 5m --history-max 5 --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
   when:
     branch:
