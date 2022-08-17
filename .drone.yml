@@ -28,7 +28,7 @@ steps:
 
 - name: trivy_scan
   pull: if-not-exists
-  image: trivy-image quay.io/ukhomeofficedigital/trivyscanner:master
+  image: quay.io/ukhomeofficedigital/trivyscanner:master
   commands:
   - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/acp-clamav-mirror:$${CLAMAV_BUILD_NO}
   - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/acp-clamav-http:$${CLAMAV_BUILD_NO}
