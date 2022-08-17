@@ -19,13 +19,6 @@ environment:
 
 steps:
 
-- name: Lint Chart
-  image: quay.io/ukhomeofficedigital/helm:v3.4.0
-  commands:
-    - helm lint ./charts/clamav
-  when:
-    event: [push, tag]
-
 - name: trivy_scan
   pull: if-not-exists
   image: quay.io/ukhomeofficedigital/trivyscanner:master
