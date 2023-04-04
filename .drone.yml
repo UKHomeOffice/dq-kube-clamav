@@ -50,7 +50,6 @@ steps:
     - /setup-kubeconfig.sh
     - sed -i "s/CLAMAV_BUILD_NO/$${CLAMAV_BUILD_NO}/g" ./charts/clamav/Chart.yaml
     - sed -i "s/NGINX_PROXY_VERSION/$${NGINX_PROXY_VERSION}/g" ./charts/clamav/values.yaml
-    - helm list --all
     - helm upgrade -i --wait --timeout 10m --history-max 5 --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
   when:
     event:
