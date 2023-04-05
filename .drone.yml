@@ -14,7 +14,7 @@ environment:
   PROD_KUBE_SERVER: https://kube-api-prod.prod.acp.homeoffice.gov.uk
   PROD_KUBE_CLUSTER_NAME: acp-prod
   IMAGE_NAME: clamav
-  CLAMAV_BUILD_NO: 0.4.1
+  CLAMAV_BUILD_NO: 0.4.2
   NGINX_PROXY_VERSION: v5
 
 steps:
