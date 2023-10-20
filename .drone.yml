@@ -38,6 +38,7 @@ steps:
   pull: if-not-exists
   image: quay.io/ukhomeofficedigital/helm:v3.4.0
   environment:
+    ENV: notprod
     USER: helm
     KUBE_NAMESPACE: dq-apps-notprod
     NOTPROD_HELM_KUBETOKEN:

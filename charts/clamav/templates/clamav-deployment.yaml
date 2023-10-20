@@ -2,6 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "clamav.fullname" . }}
+  annotations:
+   environment: {{ .ENV }}
+   {{ if eq .ENV "notprod" }}downscaler/uptime: Mon-Fri 07:00-18:00 Europe/London{{ end }}
   labels:
     {{- include "clamav.labels" . | nindent 4 }}
 spec:
