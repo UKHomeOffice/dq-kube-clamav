@@ -8,6 +8,8 @@ nameOverride: ""
 # fullnameOverride -- override the full name of the clamav chart
 fullnameOverride: "dq-clamav"
 
+envPlaceholder: dev
+
 service:
   # service.port -- The port to be used by the clamav service
   port: 443
