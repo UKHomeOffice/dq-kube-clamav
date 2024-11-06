@@ -4,6 +4,11 @@ metadata:
   name: {{ include "clamav.fullname" . }}-mirror
   labels:
     {{- include "clamav.labels" . | nindent 4 }}
+  annotations:
+   environment: "{{ .Values.envPlaceholder }}"   
+   {{ if eq (.Values.envPlaceholder | toString ) "notprod" }}    
+   downscaler/uptime: Mon-Fri 07:00-18:00 Europe/London 
+   {{ end }}
 spec:
   replicas: {{ .Values.clamavMirror.replicaCount }}
   selector:
