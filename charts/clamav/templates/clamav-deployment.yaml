@@ -6,6 +6,8 @@ metadata:
    environment: "{{ .Values.envPlaceholder }}"   
    {{ if eq (.Values.envPlaceholder | toString ) "notprod" }}    
    downscaler/uptime: Mon-Fri 07:00-18:00 Europe/London 
+   downscaler/shutdown-1: 16-20 Dec 17:00-09:00 Europe/London
+   downscaler/shutdown-2: 20 Dec 17:00-2 Jan 09:00 Europe/London
    {{ end }}
   labels:
     {{- include "clamav.labels" . | nindent 4 }}
