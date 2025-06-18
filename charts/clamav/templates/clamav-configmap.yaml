@@ -8,7 +8,8 @@ data:
     LogClean yes
     LogSyslog no
     LogVerbose yes
-    LogFile /dev/stdout
+    # LogFile /dev/stdout
+    LogFile /var/log/clamav/clamd.log
     DatabaseDirectory /var/lib/clamav
     TCPSocket 3310
     Foreground yes
