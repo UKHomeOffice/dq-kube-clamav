@@ -74,7 +74,7 @@ steps:
     - sed -i 's/minReplicas\:\ 1/minReplicas\:\ 2/g' ./charts/clamav/values.yaml
     - sed -i "s/CLAMAV_BUILD_NO/$${CLAMAV_BUILD_NO}/g" ./charts/clamav/Chart.yaml
     - sed -i "s/NGINX_PROXY_VERSION/$${NGINX_PROXY_VERSION}/g" ./charts/clamav/values.yaml
-    - helm upgrade -i --wait --timeout 5m --history-max 5 --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
+    - helm upgrade -i --wait --timeout 10m --history-max 5 --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
   when:
     branch:
     - master
