@@ -14,7 +14,7 @@ environment:
   PROD_KUBE_SERVER: https://kube-api-prod.prod.acp.homeoffice.gov.uk
   PROD_KUBE_CLUSTER_NAME: acp-prod
   IMAGE_NAME: clamav
-  CLAMAV_BUILD_NO: v0.5.2
+  CLAMAV_BUILD_NO: v0.5.3
   NGINX_PROXY_VERSION: v4.4
 
 steps:
@@ -74,7 +74,7 @@ steps:
     - sed -i 's/minReplicas\:\ 1/minReplicas\:\ 2/g' ./charts/clamav/values.yaml
     - sed -i "s/CLAMAV_BUILD_NO/$${CLAMAV_BUILD_NO}/g" ./charts/clamav/Chart.yaml
     - sed -i "s/NGINX_PROXY_VERSION/$${NGINX_PROXY_VERSION}/g" ./charts/clamav/values.yaml
-    - helm upgrade -i --wait --timeout 5m --history-max 5 --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
+    - helm upgrade -i --wait --timeout 10m --history-max 5 --namespace=$${KUBE_NAMESPACE} $${IMAGE_NAME} ./charts/clamav
   when:
     branch:
     - master
