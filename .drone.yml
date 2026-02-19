@@ -15,7 +15,7 @@ environment:
   PROD_KUBE_CLUSTER_NAME: acp-prod
   IMAGE_NAME: clamav
   CLAMAV_BUILD_NO: v0.5.3
-  NGINX_PROXY_VERSION: v4.4
+  NGINX_PROXY_VERSION: v4.4.8
 
 steps:
 
